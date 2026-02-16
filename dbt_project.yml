@@ -38,5 +38,13 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   my_new_project:
     # Applies to all files under models/example/
-    example:
-      +materialized: table
+    +materialized: table
+  # my_new_project:
+  # target: dev
+  # outputs:
+  #   dev:
+  #     type: bigquery
+  #     method: oauth
+  #     project: portifolio-487612
+  #     dataset: demo_portifolio
+  #     location: southamerica-east1

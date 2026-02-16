@@ -1,0 +1,1 @@
+SELECT * FROM `portifolio-487612.demo_portifolio.ecom_sales`
