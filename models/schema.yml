@@ -1,0 +1,20 @@
+
+version: 2
+
+models:
+    - name: cohort
+      description: "Tabela com a safra de entrada e a recompra"
+      columns:
+          - name: month_number
+            description: "Quantidade de meses passados do mês de entrada"
+            tests:
+                - not_null
+
+    - name: active_base
+      description: "Base ativa por mês e número de churn"
+      columns:
+          - name: active_base
+            description: "Base ativa no mês considerando ativo como pelo menos uma compra nos últimos 3 meses"
+            tests:
+                - not_null
+                
