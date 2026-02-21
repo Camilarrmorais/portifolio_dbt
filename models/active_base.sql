@@ -21,7 +21,7 @@ last_purchase_per_client AS (
 
 ),
 
--- Base ativa = clientes com compra nos últimos 90 dias antes do mês
+-- Base ativa = clientes com compra nos últimos 90 dias antes do fim do mês
 active_base AS (
 
     SELECT
@@ -29,8 +29,8 @@ active_base AS (
         COUNT(DISTINCT s.client_id) AS active_base
     FROM monthly_calendar m
     JOIN {{ ref('sales_ecom') }} s
-        ON s.purchase_date BETWEEN DATE_SUB(m.month, INTERVAL 90 DAY)
-                               AND DATE_SUB(m.month, INTERVAL 1 DAY)
+        ON s.purchase_date BETWEEN DATE_SUB(m.month, INTERVAL 2 MONTH)
+                               AND LAST_DAY(m.month, MONTH)
     GROUP BY m.month
 
 ),
@@ -55,17 +55,21 @@ monthly_churn AS (
 
 )
 
-SELECT
-    m.month,
-    COALESCE(a.active_base, 0) AS active_base,
-    COALESCE(c.churned_customers, 0) AS churned_customers,
-    SAFE_DIVIDE(
-        COALESCE(c.churned_customers, 0),
-        COALESCE(a.active_base, 0)
-    ) AS churn_rate
-FROM monthly_calendar m
-LEFT JOIN active_base a
-    ON m.month = a.month
-LEFT JOIN monthly_churn c
-    ON m.month = c.month
-ORDER BY m.month
+-- SELECT
+--     m.month,
+--     COALESCE(a.active_base, 0) AS active_base,
+--     COALESCE(c.churned_customers, 0) AS churned_customers,
+--     SAFE_DIVIDE(
+--         COALESCE(c.churned_customers, 0),
+--         COALESCE(a.active_base, 0)
+--     ) AS churn_rate
+-- FROM monthly_calendar m
+-- LEFT JOIN active_base a
+--     ON m.month = a.month
+-- LEFT JOIN monthly_churn c
+--     ON m.month = c.month
+-- ORDER BY m.month
+
+select *
+from active_base
+ORDER BY month
